@@ -9,5 +9,5 @@ enum class ErrorCode(
     INVALID_TOKEN(401, "Invalid Token"),
     EXPIRED_TOKEN(401, "Expired Token"),
 
-    USER_NOT_FOUND(404, "User Not Found"),
+    ADMIN_NOT_FOUND(404, "Admin Not Found"),
 }
