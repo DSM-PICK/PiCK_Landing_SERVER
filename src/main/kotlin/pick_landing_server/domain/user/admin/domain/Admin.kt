@@ -1,15 +1,14 @@
 package pick_landing_server.domain.user.admin.domain
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
-data class Admin (
+data class Admin(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long,
-    private val accountId: String,
-    private val password: String
+    @GeneratedValue
+    private var id: Long? = null,
+    @Column
+    private var accountId: String,
+    @Column
+    private var password: String
 )
