@@ -8,6 +8,7 @@ enum class ErrorCode(
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
     INVALID_TOKEN(401, "Invalid Token"),
     EXPIRED_TOKEN(401, "Expired Token"),
+    ALREADY_EXIST_ADMIN(401,"Already Exist Admin"),
 
     ADMIN_NOT_FOUND(404, "Admin Not Found"),
 }
