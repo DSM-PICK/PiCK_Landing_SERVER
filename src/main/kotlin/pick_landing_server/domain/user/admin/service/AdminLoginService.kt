@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import pick_landing_server.domain.user.admin.domain.repository.AdminRepository
 import pick_landing_server.domain.user.admin.exception.AdminNotFoundException
 import pick_landing_server.domain.user.admin.exception.PasswordMissMatchException
-import pick_landing_server.domain.user.admin.presentation.dto.request.AdminSignupRequest
+import pick_landing_server.domain.user.admin.presentation.dto.request.AdminLoginRequest
 import pick_landing_server.global.security.jwt.JwtTokenProvider
 import pick_landing_server.global.security.jwt.dto.TokenResponse
 
@@ -17,7 +17,7 @@ class AdminLoginService (
     private val adminRepository: AdminRepository
 ){
     @Transactional
-    fun login(request: AdminSignupRequest):TokenResponse{
+    fun login(request: AdminLoginRequest):TokenResponse{
         val admin = adminRepository.findByAccountId(request.adminId) ?: throw AdminNotFoundException
 
         if(passwordEncoder.matches(request.password,admin.password)){
