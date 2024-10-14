@@ -1,8 +1,5 @@
 package pick_landing_server.domain.user.admin.presentation
 
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.security.Keys
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping

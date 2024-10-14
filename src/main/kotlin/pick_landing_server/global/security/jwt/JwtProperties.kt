@@ -2,7 +2,7 @@ package pick_landing_server.global.security.jwt
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-//@ConstructorBinding
+
 @ConfigurationProperties("auth.jwt")
 class JwtProperties (
     val secretKey: String,

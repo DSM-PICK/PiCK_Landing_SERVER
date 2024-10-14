@@ -4,8 +4,6 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.io.Decoders
-import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -17,10 +15,8 @@ import pick_landing_server.global.security.auth.AdminDetailsService
 import pick_landing_server.global.security.jwt.dto.TokenResponse
 import pick_landing_server.global.security.jwt.exception.ExpiredTokenException
 import pick_landing_server.global.security.jwt.exception.InvalidJwtException
-import java.nio.charset.StandardCharsets
-import java.security.Key
 import java.util.*
-import javax.crypto.SecretKey
+
 
 
 @Component
@@ -48,43 +44,12 @@ class JwtTokenProvider(
             .setSubject(userId)
             .setHeaderParam("typ",tokenType)
             .signWith(SignatureAlgorithm.HS256, jwtProperties.secretKey)
-           // .signWith(key, SignatureAlgorithm.HS256)
             .setExpiration(Date(System.currentTimeMillis()+exp*1000))
             .setIssuedAt(Date())
             .compact()
 
     }
 
-    public fun reIssue(refreshToken: String): TokenResponse{
-        if(!isRefreshToken(refreshToken)){
-            throw InvalidJwtException
-        }
-
-        refreshTokenRepository.findByToken(refreshToken)
-            ?.let { token ->
-                val id = token.id
-
-                val tokenResponse = generateToken(id)
-                token.update(tokenResponse.refreshToken,jwtProperties.refreshExp)
-                //return TokenResponse(tokenResponse.accessToken,tokenResponse.refreshToken)
-                return tokenResponse
-            } ?: throw InvalidJwtException
-    }
-
-    private fun isRefreshToken(token: String): Boolean{
-        return REFRESH_KEY == getJws(token!!).header["typ"].toString()
-    }
-
-    public fun validToken(token: String): Boolean{
-        try {
-            Jwts.parser()
-                .setSigningKey(jwtProperties.secretKey)
-                .parseClaimsJws(token)
-            return true
-        }catch (e: Exception){
-            return false
-        }
-    }
 
     public fun resolveToken(request: HttpServletRequest): String? =
         request.getHeader(jwtProperties.header)?.also {
