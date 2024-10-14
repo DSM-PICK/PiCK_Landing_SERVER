@@ -6,9 +6,7 @@ import jakarta.persistence.*
 data class Admin(
     @Id
     @GeneratedValue
-    private var id: Long? = null,
-    @Column
-    private var accountId: String,
-    @Column
-    private var password: String
+    var id: Long? = null,
+    var accountId: String,
+    var password: String
 )
