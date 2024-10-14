@@ -6,5 +6,6 @@ import pick_landing_server.domain.user.admin.domain.Admin
 
 @Repository
 interface AdminRepository : CrudRepository<Admin,Long> {
-    fun findByAccountId(accountId:String)
+    fun findByAccountId(accountId:String):Admin?
+    fun existsByAccountId(accountId: String):Boolean
 }
