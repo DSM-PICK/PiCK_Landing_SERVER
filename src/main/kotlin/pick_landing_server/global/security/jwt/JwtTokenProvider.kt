@@ -4,22 +4,28 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.stereotype.Component
 import pick_landing_server.domain.auth.domain.RefreshToken
 import pick_landing_server.domain.auth.domain.repository.RefreshTokenRepository
-import pick_landing_server.global.security.auth.AdminDetails
 import pick_landing_server.global.security.auth.AdminDetailsService
 import pick_landing_server.global.security.jwt.dto.TokenResponse
 import pick_landing_server.global.security.jwt.exception.ExpiredTokenException
 import pick_landing_server.global.security.jwt.exception.InvalidJwtException
+import java.nio.charset.StandardCharsets
+import java.security.Key
 import java.util.*
+import javax.crypto.SecretKey
 
+
+@Component
 class JwtTokenProvider(
     private val jwtProperties: JwtProperties,
-    private val adminDetails: AdminDetails,
     private val adminDetailsService: AdminDetailsService,
     private val refreshTokenRepository: RefreshTokenRepository
 
@@ -41,7 +47,8 @@ class JwtTokenProvider(
         return Jwts.builder()
             .setSubject(userId)
             .setHeaderParam("typ",tokenType)
-            .signWith(SignatureAlgorithm.HS256,jwtProperties.secretKey)
+            .signWith(SignatureAlgorithm.HS256, jwtProperties.secretKey)
+           // .signWith(key, SignatureAlgorithm.HS256)
             .setExpiration(Date(System.currentTimeMillis()+exp*1000))
             .setIssuedAt(Date())
             .compact()
