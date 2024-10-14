@@ -1,11 +1,15 @@
 package pick_landing_server.global.security.auth
 
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.stereotype.Component
+
 
 class AdminDetails (
     private val adminName: String,
 ): UserDetails{
+
     override fun getAuthorities(): List<SimpleGrantedAuthority> {
         return listOf<SimpleGrantedAuthority>(SimpleGrantedAuthority("Admin"))
     }
@@ -15,7 +19,7 @@ class AdminDetails (
     }
 
     override fun getUsername(): String {
-        return username
+        return adminName
     }
 
     override fun isAccountNonExpired(): Boolean {
