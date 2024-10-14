@@ -15,6 +15,7 @@ import pick_landing_server.global.security.jwt.JwtFilter
 import pick_landing_server.global.security.jwt.JwtTokenProvider
 
 @EnableWebSecurity
+@Configuration
 class SecurityConfig (
     private val objectMapper: ObjectMapper,
     private val jwtTokenProvider: JwtTokenProvider
@@ -32,7 +33,8 @@ class SecurityConfig (
         http
             .authorizeHttpRequests {
                 it
-                    .anyRequest().permitAll()
+                    .requestMatchers("admin/signup","admin/login").permitAll()
+                    .requestMatchers("test/haha/**").authenticated()
             }
 
         .addFilterBefore(JwtFilter(jwtTokenProvider),UsernamePasswordAuthenticationFilter::class.java)
