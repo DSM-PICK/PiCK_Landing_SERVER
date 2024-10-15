@@ -1,9 +1,10 @@
 package pick_landing_server.global.security.jwt
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jws
+import io.jsonwebtoken.Jwt
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -15,8 +16,9 @@ import pick_landing_server.global.security.auth.AdminDetailsService
 import pick_landing_server.global.security.jwt.dto.TokenResponse
 import pick_landing_server.global.security.jwt.exception.ExpiredTokenException
 import pick_landing_server.global.security.jwt.exception.InvalidJwtException
+import java.nio.charset.StandardCharsets
 import java.util.*
-
+import javax.crypto.SecretKey
 
 
 @Component
@@ -39,11 +41,14 @@ class JwtTokenProvider(
         return TokenResponse(accessToken, refreshToken)
     }
 
+    private fun getKey():SecretKey = Keys.hmacShaKeyFor(jwtProperties.secretKey.toByteArray(StandardCharsets.UTF_8))
+
+
     private fun generateToken(userId: String, tokenType: String, exp: Long):String {
         return Jwts.builder()
             .setSubject(userId)
             .setHeaderParam("typ",tokenType)
-            .signWith(SignatureAlgorithm.HS256, jwtProperties.secretKey)
+            .signWith(getKey(),SignatureAlgorithm.HS256)
             .setExpiration(Date(System.currentTimeMillis()+exp*1000))
             .setIssuedAt(Date())
             .compact()
@@ -59,14 +64,19 @@ class JwtTokenProvider(
         }
 
     public fun authentication(token: String): Authentication?{
-        val body: Claims = getJws(token).body
+        val body: Claims = getJws(token)
         val userDetails: UserDetails = getDetails(body)
         return UsernamePasswordAuthenticationToken(userDetails,"",userDetails.authorities)
     }
 
-    private fun getJws(token: String): Jws<Claims>{
+    private fun getJws(token: String): Claims{
         try {
-            return Jwts.parser().setSigningKey(jwtProperties.secretKey).parseClaimsJws(token)
+            return Jwts
+                .parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .body
         } catch (e: ExpiredTokenException){
             throw ExpiredTokenException
         }catch (e: Exception){
