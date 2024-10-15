@@ -20,10 +20,11 @@ class AdminLoginService (
     fun login(request: AdminLoginRequest):TokenResponse{
         val admin = adminRepository.findByAccountId(request.adminId) ?: throw AdminNotFoundException
 
-        if(passwordEncoder.matches(request.password,admin.password)){
-            return jwtTokenProvider.generateToken(admin.accountId)
-        }else{
+        if(!passwordEncoder.matches(request.password,admin.password))
             throw PasswordMissMatchException
-        }
+
+        return jwtTokenProvider.generateToken(admin.accountId)
+
+
     }
 }
