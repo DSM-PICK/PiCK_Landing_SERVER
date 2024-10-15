@@ -1,7 +1,6 @@
 package pick_landing_server.global.security.jwt
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jwt
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
