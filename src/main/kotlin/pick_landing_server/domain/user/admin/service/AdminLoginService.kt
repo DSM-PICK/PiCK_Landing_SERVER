@@ -1,8 +1,8 @@
 package pick_landing_server.domain.user.admin.service
 
-import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import pick_landing_server.domain.user.admin.domain.repository.AdminRepository
 import pick_landing_server.domain.user.admin.exception.AdminNotFoundException
 import pick_landing_server.domain.user.admin.exception.PasswordMissMatchException
@@ -16,7 +16,7 @@ class AdminLoginService (
     private val jwtTokenProvider: JwtTokenProvider,
     private val adminRepository: AdminRepository
 ){
-    @Transactional
+    @Transactional(readOnly = true)
     fun login(request: AdminLoginRequest):TokenResponse{
         val admin = adminRepository.findByAccountId(request.adminId) ?: throw AdminNotFoundException
 
