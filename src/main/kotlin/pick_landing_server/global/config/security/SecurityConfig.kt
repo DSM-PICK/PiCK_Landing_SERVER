@@ -34,6 +34,7 @@ class SecurityConfig (
             .authorizeHttpRequests {
                 it
                     .requestMatchers("admin/signup","admin/login").permitAll()
+                    .requestMatchers("/application/**").permitAll()
                     .requestMatchers("test/haha/**").authenticated()
             }
 
