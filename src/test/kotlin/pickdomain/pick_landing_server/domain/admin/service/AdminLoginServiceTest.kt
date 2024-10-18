@@ -1,3 +1,4 @@
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -7,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.password.PasswordEncoder
 import pick_landing_server.domain.user.admin.domain.Admin
 import pick_landing_server.domain.user.admin.domain.repository.AdminRepository
+import pick_landing_server.domain.user.admin.exception.PasswordMissMatchException
 import pick_landing_server.domain.user.admin.presentation.dto.request.AdminLoginRequest
 import pick_landing_server.domain.user.admin.service.AdminLoginService
 import pick_landing_server.global.security.jwt.JwtTokenProvider
@@ -54,6 +56,23 @@ internal class AdminLoginServiceTest {
         val testResponse = TokenResponse(accessToken = "asdfasdf", refreshToken = "asdfasdf")
         assertEquals(testResponse.refreshToken, adminLoginService.login(testRequest).refreshToken)
         assertEquals(testResponse.accessToken, adminLoginService.login(testRequest).accessToken)
+    }
+
+    @Test
+    fun failedLogin() {
+
+        val testErroneousRequest = AdminLoginRequest(
+            adminId = "erroneousAdmin",
+            password = "erroneousPassword"
+        )
+        `when`(adminRepository.findByAccountId(testErroneousRequest.adminId)).thenReturn(testAdmin)
+        try {
+            `when`(passwordEncoder.matches(testErroneousRequest.password, testAdmin.password)).thenReturn(true)
+        } catch (e: PasswordMissMatchException) {
+            assertEquals("Password Miss Match",e.message)
+        }
+
+
     }
 
 }
