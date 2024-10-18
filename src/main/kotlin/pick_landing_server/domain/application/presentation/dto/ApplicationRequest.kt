@@ -12,10 +12,11 @@ data class ApplicationRequest (
     @field:NotNull(message = "공백 안됨")
     val schoolNum: Int,
     @field:NotBlank(message = "phone_number은 Null 또는 공백 또는 띄어쓰기를 허용하지 않습니다.")
-    @Length(max = 11)
+    @field:Size(min = 11, max = 11)
     val phone: String,
     @field:NotNull
     val major: Major,
-    @field:NotNull @Size(max = 300, message = "300글자 내외로 작성해주세요")
+    @field:NotNull
+    @field:Size(max = 300, message = "300글자 내외로 작성해주세요")
     val motivation: String
 )
