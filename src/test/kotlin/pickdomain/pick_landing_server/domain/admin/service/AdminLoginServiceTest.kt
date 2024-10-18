@@ -2,6 +2,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.springframework.boot.test.context.SpringBootTest
@@ -11,6 +12,7 @@ import pick_landing_server.domain.user.admin.domain.repository.AdminRepository
 import pick_landing_server.domain.user.admin.exception.PasswordMissMatchException
 import pick_landing_server.domain.user.admin.presentation.dto.request.AdminLoginRequest
 import pick_landing_server.domain.user.admin.service.AdminLoginService
+import pick_landing_server.global.error.exception.PickException
 import pick_landing_server.global.security.jwt.JwtTokenProvider
 import pick_landing_server.global.security.jwt.dto.TokenResponse
 
@@ -66,14 +68,12 @@ internal class AdminLoginServiceTest {
             password = "erroneousPassword"
         )
         `when`(adminRepository.findByAccountId(testErroneousRequest.adminId)).thenReturn(testAdmin)
-        try {
-            `when`(passwordEncoder.matches(testErroneousRequest.password, testAdmin.password)).thenReturn(true)
-        } catch (e: PasswordMissMatchException) {
-            assertEquals("Password Miss Match",e.message)
+        `when`(passwordEncoder.matches(testErroneousRequest.password, testAdmin.password)).thenThrow(PasswordMissMatchException)
+
+        assertThrows<PasswordMissMatchException> {
+            (passwordEncoder.matches(testErroneousRequest.password, testAdmin.password))
         }
 
-
     }
-
 }
 
