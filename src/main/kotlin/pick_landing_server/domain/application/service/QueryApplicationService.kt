@@ -20,6 +20,7 @@ class QueryApplicationService (
                 major = app.major,
                 motivation = app.motivation,
                 date = app.date,
+                id = app.id
             ) }.toList()
     }
 }

@@ -7,6 +7,7 @@ import pick_landing_server.domain.application.domain.Major
 import java.time.LocalDateTime
 
 data class QueryApplicationResponse (
+    val id: Long?,
     @field:NotBlank
     val name: String,
     @field:NotNull(message = "공백 안됨")
