@@ -4,6 +4,8 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 data class Application(
@@ -14,5 +16,6 @@ data class Application(
     val schoolNum : Int,
     val phone : String,
     val major : Major,
-    val motivation : String
+    val motivation : String,
+    var date: LocalDateTime
 )

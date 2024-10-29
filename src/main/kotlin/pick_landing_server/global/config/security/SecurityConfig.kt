@@ -35,7 +35,6 @@ class SecurityConfig (
                 it
                     .requestMatchers("admin/signup","admin/login").permitAll()
                     .requestMatchers("/application/**").permitAll()
-                    .requestMatchers("test/haha/**").authenticated()
             }
 
         .addFilterBefore(JwtFilter(jwtTokenProvider),UsernamePasswordAuthenticationFilter::class.java)
