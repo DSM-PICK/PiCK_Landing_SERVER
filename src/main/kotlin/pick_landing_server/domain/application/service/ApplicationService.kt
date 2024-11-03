@@ -1,12 +1,13 @@
 package pick_landing_server.domain.application.service
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import pick_landing_server.domain.application.domain.Application
 import pick_landing_server.domain.application.domain.repository.ApplicationRepository
 import pick_landing_server.domain.application.presentation.dto.ApplicationRequest
 
 @Service
-@org.springframework.transaction.annotation.Transactional
+@Transactional
 class ApplicationService (
     private val applicationRepository: ApplicationRepository
 ){
